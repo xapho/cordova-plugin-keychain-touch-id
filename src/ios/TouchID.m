@@ -79,6 +79,7 @@
     NSString* password = (NSString*)[command.arguments objectAtIndex:1];
     @try {
         self.MyKeychainWrapper = [[KeychainWrapper alloc]init];
+        [self.MyKeychainWrapper setAccessibilityType:kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly];
         [self.MyKeychainWrapper mySetObject:password forKey:(__bridge id)(kSecValueData)];
         [self.MyKeychainWrapper writeToKeychain];
         [[NSUserDefaults standardUserDefaults]setBool:true forKey:self.TAG];

@@ -15,6 +15,7 @@ static const UInt8 kKeychainItemIdentifier[]    = "com.apple.dts.KeychainUI\0";
 
 @property (nonatomic, strong) NSMutableDictionary *keychainData;
 @property (nonatomic, strong) NSMutableDictionary *genericPasswordQuery;
+@property (nonatomic) CFTypeRef accessibilityType;
 
 @end
 
@@ -104,6 +105,18 @@ static const UInt8 kKeychainItemIdentifier[]    = "com.apple.dts.KeychainUI\0";
     return [_keychainData objectForKey:key];
 }
 
+- (void)setAccessibilityType:(CFTypeRef)accessibilityType {
+    _accessibilityType = accessibilityType;
+}
+
+- (CFTypeRef)accessibilityType {
+    if (_accessibilityType == NULL) {
+        // Valor por defecto seguro
+        return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly;
+    }
+    return _accessibilityType;
+}
+
 // Reset the values in the keychain item, or create a new item if it
 // doesn't already exist:
 
@@ -151,6 +164,10 @@ static const UInt8 kKeychainItemIdentifier[]    = "com.apple.dts.KeychainUI\0";
                                             length:strlen((const char *)kKeychainItemIdentifier)];
     [returnDictionary setObject:keychainItemID forKey:(__bridge id)kSecAttrGeneric];
     [returnDictionary setObject:(__bridge id)kSecClassGenericPassword forKey:(__bridge id)kSecClass];
+
+    //configure accesibility level keychain
+    [returnDictionary setObject:(__bridge id)[self accessibilityType] 
+                         forKey:(__bridge id)kSecAttrAccessible];
     
     // Convert the password NSString to NSData to fit the API paradigm:
     NSString *passwordString = [dictionaryToConvert objectForKey:(__bridge id)kSecValueData];

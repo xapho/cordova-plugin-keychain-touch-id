@@ -15,5 +15,6 @@
 - (id)myObjectForKey:(id)key;
 - (void)writeToKeychain;
 - (void)resetKeychainItem;
+- (void)setAccessibilityType:(CFTypeRef)accessibilityType;
 
 @end
